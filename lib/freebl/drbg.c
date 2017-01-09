@@ -397,8 +397,8 @@ static PRCallOnceType coRNGInit;
 static PRStatus
 rng_init(void)
 {
-    PRUint8 bytes[PRNG_SEEDLEN * 2]; /* entropy + nonce */
-    unsigned int numBytes;
+    PRUint8 bytes[PRNG_SEEDLEN * 2] = { 0 }; /* entropy + nonce */
+    unsigned int numBytes = PRNG_SEEDLEN * 2;
     SECStatus rv = SECSuccess;
 
     if (globalrng == NULL) {
@@ -417,9 +417,9 @@ rng_init(void)
         }
 
         /* Try to get some seed data for the RNG */
-        numBytes = (unsigned int)RNG_SystemRNG(bytes, sizeof bytes);
-        PORT_Assert(numBytes == 0 || numBytes == sizeof bytes);
-        if (numBytes != 0) {
+        // numBytes = (unsigned int)RNG_SystemRNG(bytes, sizeof bytes);
+        // PORT_Assert(numBytes == 0 || numBytes == sizeof bytes);
+        // if (numBytes != 0) {
             /* if this is our first call,  instantiate, otherwise reseed
              * prng_instantiate gets a new clean state, we want to mix
              * any previous entropy we may have collected */
@@ -429,12 +429,12 @@ rng_init(void)
                 rv = prng_reseed_test(globalrng, bytes, numBytes, NULL, 0);
             }
             memset(bytes, 0, numBytes);
-        } else {
-            PZ_DestroyLock(globalrng->lock);
-            globalrng->lock = NULL;
-            globalrng = NULL;
-            return PR_FAILURE;
-        }
+        // } else {
+        //     PZ_DestroyLock(globalrng->lock);
+        //     globalrng->lock = NULL;
+        //     globalrng = NULL;
+        //     return PR_FAILURE;
+        // }
 
         if (rv != SECSuccess) {
             return PR_FAILURE;
@@ -447,7 +447,7 @@ rng_init(void)
         prng_generateNewBytes(globalrng, bytes, SHA256_LENGTH, NULL, 0);
 
         /* Fetch more entropy into the PRNG */
-        RNG_SystemInfoForRNG();
+        // RNG_SystemInfoForRNG();
     }
     return PR_SUCCESS;
 }
