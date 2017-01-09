@@ -1,0 +1,76 @@
+SHELL=bash
+.PHONY: all cbmc compose sat analyze compile_runs run clean
+
+PROJECT_MK = nss.mk
+#$(shell find -name "*.mk" -print -quit)
+PROJECT=$(basename $(PROJECT_MK))
+
+help:
+	@echo "Injectivity checker by Felix Dörre and Vladimir Klebanov"
+	@echo
+	@echo -e "To use the tool on your project:"
+	@echo -e "1) complete the harness verifyMain.c, identifying inputs and outputs of \n   your code"
+	@echo -e "2) complete/write the makefile snippet PROJECTNAME.mk identifying \n   compile dependencies of your code"
+	@echo -e "3) use one of the following make targets"
+	@echo
+#	@echo "cbmc"
+	@echo "sanity		perform a sanity check that CBMC works with your code and"
+	@echo "		that assertion injection works as intended"
+	@echo "compose		generate a composed CNF formalizing injectivity"
+	@echo "sat		solve the composed CNF"
+	@echo "analyze		parse the model of the composed CNF (if one exists) and"
+	@echo "		show a pair of concrete inputs violating injectivity"
+	@echo "compile_runs	compile two executables with the violating inputs"
+	@echo "diff_runs	run the above executables, showing output in a side-by-side diff"
+	@echo
+
+all: help
+
+include $(PROJECT_MK)
+
+cbmc: $(PROJECT).cnf
+
+$(PROJECT).cnf: ${HEADERS} ${CBMC_SRC}
+	$(CBMC) ${CBMC_SRC} ${CBMC_OPTS} ${CBMC_INCL} --dimacs --outfile $(PROJECT).cnf ; [ $$? -eq 0 -o $$? -eq 10 ]
+
+sanity: ${HEADERS} ${CBMC_SRC}
+	$(CBMC) ${CBMC_SRC} ${CBMC_OPTS} ${CBMC_INCL} --unwinding-assertions  ; [ $$? -eq 0 -o $$? -eq 10 ]
+
+compose: $(PROJECT).cnf.composed
+
+$(PROJECT).cnf.composed: $(PROJECT).cnf
+	cnfcomposer.sh $(PROJECT).cnf
+
+sat: $(PROJECT).cnf.composed.out
+
+$(PROJECT).cnf.composed.out: $(PROJECT).cnf.composed
+	minisat $^ $@ ; [ $$? -eq 20 -o $$? -eq 10 ]
+
+analyze: $(PROJECT).cnf $(PROJECT).cnf.composed.out
+	cexextractor.sh $(PROJECT).cnf $(PROJECT).cnf.composed.out ex_a.c ex_b.c > $(PROJECT).analysis
+	cat $(PROJECT).analysis
+
+compile_runs: #compile
+	gcc -o test_a -g $(RUN_INCL) -D INF_TEST_A $(RUN_OPTS) $(RUN_SRC)
+	gcc -o test_b -g $(RUN_INCL) -D INF_TEST_B $(RUN_OPTS) $(RUN_SRC)
+
+diff_runs: compile_runs
+	./test_a > a_out
+	./test_b > b_out
+	diff -y -W 200 a_out b_out || true
+
+diff_color: compile_runs
+	./test_a > a_out
+	./test_b > b_out
+	diff -y -W 350 a_out b_out | color.pl -l `grep -Pzo "(?<=OUTPUT:\n).*" b_out | sed -e "s/.\{20\}/&,/g"` | less -SR
+
+diff_debug_runs: compile_runs
+	gdb -batch -q -x trace.gdb ./test_a > a_out
+	gdb -batch -q -x trace.gdb ./test_b > b_out
+	diff -y -W 200 a_out b_out || true
+
+run:
+	./a
+
+clean:
+	rm -f $(PROJECT).cnf $(PROJECT)-sanity.cnf $(PROJECT)-sanity.cnf.out $(PROJECT).cnf.composed $(PROJECT).cnf.composed.out $(PROJECT).analysis ./test_a ./test_b ./a.out a_out b_out ex_a.c ex_b.c
