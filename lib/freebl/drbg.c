@@ -365,10 +365,12 @@ prng_generateNewBytes(RNGContext *rng,
         /* short_cut to hashbuf and a couple of copies and clears */
         SHA256_HashBuf(returned_bytes, V(rng), VSize(rng));
         /* continuous rng check */
+#ifdef IGNORE
         if (memcmp(rng->lastOutput, returned_bytes, SHA256_LENGTH) == 0) {
             rng->isValid = PR_FALSE;
         }
         PORT_Memcpy(rng->lastOutput, returned_bytes, sizeof rng->lastOutput);
+#endif
     } else {
         prng_Hashgen(rng, returned_bytes, no_of_returned_bytes);
     }
