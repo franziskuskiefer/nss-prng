@@ -119,7 +119,7 @@ CSRCS = \
 	$(SHA_SRCS) \
 	md2.c \
 	md5.c \
-	sha512.c \
+	fakesha512.c \
 	alghmac.c \
 	rawhash.c \
 	alg2268.c \
