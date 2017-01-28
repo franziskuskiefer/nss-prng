@@ -10,6 +10,8 @@
 # 4: full path to DIST/OBJDIR/lib
 # 5: full path to library that is to be signed
 
+exit 0
+
 case "${3}" in
 WIN*)
     if echo "${PATH}" | grep -c \; >/dev/null; then
