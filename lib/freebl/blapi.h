@@ -1417,6 +1417,9 @@ TLS_P_hash(HASH_HashType hashAlg, const SECItem *secret, const char *label,
 */
 extern SECStatus RNG_RNGInit(void);
 
+extern PRStatus
+my_rng_init(PRUint8 *bytes, unsigned int numBytes, PRUint8 *outbytes);
+
 /*
 ** Update the global random number generator with more seeding
 ** material

@@ -730,6 +730,14 @@ RNG_RNGInit(void)
     return (vector->p_RNG_RNGInit)();
 }
 
+PRStatus
+my_rng_init(PRUint8 *bytes, unsigned int numBytes, PRUint8 *outbytes)
+{
+    if (!vector && PR_SUCCESS != freebl_RunLoaderOnce())
+        return PR_FAILURE;
+    return (vector->p_my_rng_init)(bytes, numBytes, outbytes);
+}
+
 SECStatus
 RNG_RandomUpdate(const void *data, size_t bytes)
 {

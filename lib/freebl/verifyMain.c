@@ -13,9 +13,12 @@
 //#define INF_TEST_A
 //#define INF_TEST_B
 
-int main(){
+
 	unsigned char* in = 0;
 	unsigned char* out = 0;
+
+
+int main(){
 	unsigned char input;
 	unsigned char output;
 	int i;
@@ -44,32 +47,13 @@ int main(){
 #endif
 
 
-//	initialize();
-//	add_randomness (in, INPUT_AMOUNT, RANDOM_ORIGIN_EXTERNAL);
-
-
-
         SECStatus rv = SECFailure;
-
-        rv = RNG_RNGInit();
-        if (rv != SECSuccess) {
+        assert(INPUT_AMOUNT==OUTPUT_AMOUNT);
+        rv = my_rng_init(in, INPUT_AMOUNT, out);
+        if (rv != PR_SUCCESS) {
             SECU_PrintPRandOSError("");
             return -1;
         }
-
-	rv = RNG_RandomUpdate(in, INPUT_AMOUNT);
-        if (rv != SECSuccess) {
-            SECU_PrintPRandOSError("");
-            return -1;
-        }
-
-
-        rv = RNG_GenerateGlobalRandomBytes(out, OUTPUT_AMOUNT);
-        if (rv != SECSuccess) {
-            SECU_PrintPRandOSError("");
-            return -1;
-        }
-
 
 
 /* #ifdef __CPROVER__

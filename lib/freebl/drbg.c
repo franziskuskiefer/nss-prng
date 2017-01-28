@@ -452,6 +452,67 @@ rng_init(void)
     return PR_SUCCESS;
 }
 
+
+PRStatus
+my_rng_init(PRUint8 *bytes, unsigned int numBytes, PRUint8 *outbytes)
+{
+//    PRUint8 bytes[PRNG_SEEDLEN * 2]; /* entropy + nonce */
+//    unsigned int numBytes;
+    SECStatus rv = SECSuccess;
+
+    if (globalrng == NULL) {
+        /* bytes needs to have enough space to hold
+     * a SHA256 hash value. Blow up at compile time if this isn't true */
+//        PR_STATIC_ASSERT(sizeof(bytes) >= SHA256_LENGTH);
+        /* create a new global RNG context */
+        globalrng = &theGlobalRng;
+        PORT_Assert(NULL == globalrng->lock);
+        /* create a lock for it */
+        globalrng->lock = PZ_NewLock(nssILockOther);
+        if (globalrng->lock == NULL) {
+            globalrng = NULL;
+            PORT_SetError(PR_OUT_OF_MEMORY_ERROR);
+            return PR_FAILURE;
+        }
+
+        /* Try to get some seed data for the RNG */
+//        numBytes = (unsigned int)RNG_SystemRNG(bytes, sizeof bytes);
+//        PORT_Assert(numBytes == 0 || numBytes == sizeof bytes);
+        if (numBytes != 0) {
+            /* if this is our first call,  instantiate, otherwise reseed
+             * prng_instantiate gets a new clean state, we want to mix
+             * any previous entropy we may have collected */
+            if (V(globalrng)[0] == 0) {
+                rv = prng_instantiate(globalrng, bytes, numBytes);
+            } else {
+                assert(0);
+//                rv = prng_reseed_test(globalrng, bytes, numBytes, NULL, 0);
+            }
+//            memset(bytes, 0, numBytes);
+        } else {
+            PZ_DestroyLock(globalrng->lock);
+            globalrng->lock = NULL;
+            globalrng = NULL;
+            return PR_FAILURE;
+        }
+
+        if (rv != SECSuccess) {
+            return PR_FAILURE;
+        }
+        /* the RNG is in a valid state */
+        globalrng->isValid = PR_TRUE;
+
+        /* fetch one random value so that we can populate rng->oldV for our
+         * continous random number test. */
+        prng_generateNewBytes(globalrng, outbytes, SHA256_LENGTH, NULL, 0);
+
+        /* Fetch more entropy into the PRNG */
+//        RNG_SystemInfoForRNG();
+    }
+    return PR_SUCCESS;
+}
+
+
 /*
  * Clean up the global RNG context
  */

@@ -85,6 +85,7 @@ static const struct FREEBLVectorStr vector =
       SHA1_Flatten,
       SHA1_Resurrect,
       RNG_RNGInit,
+      my_rng_init,
       RNG_RandomUpdate,
       RNG_GenerateGlobalRandomBytes,
       RNG_RNGShutdown,
