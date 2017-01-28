@@ -158,12 +158,14 @@ prng_Hash_df(PRUint8 *requested_bytes, unsigned int no_of_bytes_to_return,
 static SECStatus
 prng_instantiate(RNGContext *rng, const PRUint8 *bytes, unsigned int len)
 {
+#ifdef IGNORE
     if (len < PRNG_SEEDLEN) {
         /* if the seedlen is to small, it's probably because we failed to get
      * enough random data */
         PORT_SetError(SEC_ERROR_NEED_RANDOM);
         return SECFailure;
     }
+#endif
     prng_Hash_df(V(rng), VSize(rng), bytes, len, NULL, 0);
     rng->V_type = prngCGenerateType;
     prng_Hash_df(rng->C, sizeof rng->C, rng->V_Data, sizeof rng->V_Data, NULL, 0);
