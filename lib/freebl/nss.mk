@@ -1,6 +1,7 @@
 HEADERS=$(shell find .. -name "*.h" )
 PATH:=$(PATH):cbmc-5-1-win
 CBMC=cbmc
+export LD_LIBRARY_PATH=../../../dist/Linux4.4_x86_64_cc_glibc_PTH_64_DBG.OBJ/lib/
 
 U=\
 prng_Hash_df.0:3
