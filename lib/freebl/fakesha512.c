@@ -174,7 +174,7 @@ SHA256_Begin(SHA256Context *ctx)
 	printf("\n\n--------------------------------------------------\n");
 	printf("INIT: %d", invocation_count);
 #endif
-//	memset(ctx->md_data,'\0', SHA_DIGEST_LENGTH + 1);
+	memset(H,'\0', SHA256_LENGTH);
 }
 
 
@@ -198,7 +198,7 @@ SHA256_Update(SHA256Context *ctx, const unsigned char *input,
 		}
 
 
-        memcpy(H, input, SHA256_LENGTH);
+        memcpy(H, input, inputLen);
 /*
 #ifndef __CPROVER__
 	printf("\nSTATE ");
