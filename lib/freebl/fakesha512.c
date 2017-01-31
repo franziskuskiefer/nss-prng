@@ -197,8 +197,7 @@ SHA256_Update(SHA256Context *ctx, const unsigned char *input,
 		if (update_count != 3) return;
 		}
 
-
-        memcpy(H, input, inputLen);
+        memcpy(H, input, SHA_MIN(inputLen, SHA256_LENGTH));
 /*
 #ifndef __CPROVER__
 	printf("\nSTATE ");
