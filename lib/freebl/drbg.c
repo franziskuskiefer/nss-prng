@@ -31,7 +31,7 @@
 #define PRNG_MAX_ADDITIONAL_BYTES PR_INT64(0x100000000)
 /* 2^35 bits or 2^32 bytes */
 #define PRNG_MAX_REQUEST_SIZE 0x10000             /* 2^19 bits or 2^16 bytes */
-#define PRNG_ADDITONAL_DATA_CACHE_SIZE (8 * 1024) /* must be less than          \
+#define PRNG_ADDITONAL_DATA_CACHE_SIZE (32) /* must be less than          \
                                                    *  PRNG_MAX_ADDITIONAL_BYTES \
                                                    */
 
