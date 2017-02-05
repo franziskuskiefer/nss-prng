@@ -386,9 +386,12 @@ prng_generateNewBytes(RNGContext *rng,
 
     /* if the prng failed, don't return any output, signal softoken */
     if (!rng->isValid) {
+assert(0);
+#ifdef IGNORE
         PORT_Memset(returned_bytes, 0, no_of_returned_bytes);
         PORT_SetError(SEC_ERROR_LIBRARY_FAILURE);
         return SECFailure;
+#endif
     }
     return SECSuccess;
 }
@@ -672,6 +675,8 @@ prng_GenerateGlobalRandomBytes(RNGContext *rng,
      * don't produce any data.
      */
     if (rng->reseed_counter[0] >= RESEED_VALUE) {
+assert(0);
+#ifdef IGNORE
         rv = prng_reseed_test(rng, NULL, 0, NULL, 0);
         PZ_Unlock(rng->lock);
         if (rv != SECSuccess) {
@@ -679,6 +684,7 @@ prng_GenerateGlobalRandomBytes(RNGContext *rng,
         }
         RNG_SystemInfoForRNG();
         PZ_Lock(rng->lock);
+#endif
     }
     /*
      * see if we have enough bytes to fulfill the request.
