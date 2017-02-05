@@ -44,7 +44,7 @@ $(PROJECT).cnf.composed: $(PROJECT).cnf
 sat: $(PROJECT).cnf.composed.out
 
 $(PROJECT).cnf.composed.out: $(PROJECT).cnf.composed
-	minisat $^ $@ ; [ $$? -eq 20 -o $$? -eq 10 ]
+	minisat -no-pre $^ $@ ; [ $$? -eq 20 -o $$? -eq 10 ]
 
 analyze: $(PROJECT).cnf $(PROJECT).cnf.composed.out
 	cexextractor.sh $(PROJECT).cnf $(PROJECT).cnf.composed.out ex_a.c ex_b.c > $(PROJECT).analysis
