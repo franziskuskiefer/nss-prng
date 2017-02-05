@@ -70,7 +70,7 @@ diff_debug_runs: compile_runs
 	diff -y -W 200 a_out b_out || true
 
 run:
-	./a
+	./test_a
 
 clean:
 	rm -f $(PROJECT).cnf $(PROJECT)-sanity.cnf $(PROJECT)-sanity.cnf.out $(PROJECT).cnf.composed $(PROJECT).cnf.composed.out $(PROJECT).analysis ./test_a ./test_b ./a.out a_out b_out ex_a.c ex_b.c
