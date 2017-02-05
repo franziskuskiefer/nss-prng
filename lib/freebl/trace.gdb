@@ -13,16 +13,16 @@ silent
 set logging on
 call fflush(0)
 set logging off
-up-silently 1
+#up-silently 1
 echo \n
-frame
+bt
 #echo \n
 cont
 end
 end
 tracefunc SHA256_Begin
-tracefunc SHA256_Update
-tracefunc SHA256_End
+#tracefunc SHA256_Update
+#tracefunc SHA256_End
 set logging off
 run
 quit
