@@ -55,15 +55,13 @@ int main(){
             return -1;
         }
 
+        rv = RNG_GenerateGlobalRandomBytes(out, OUTPUT_AMOUNT);
+        if (rv != SECSuccess) {
+            SECU_PrintPRandOSError("");
+            return -1;
+        }
 
-/* #ifdef __CPROVER__
-	_gcry_rngcsprng_add_bytes(in,  INPUT_AMOUNT, 100);
-	_gcry_rngcsprng_randomize(out, OUTPUT_AMOUNT, GCRY_VERY_STRONG_RANDOM);
-#else
-	gcry_random_add_bytes(in,  INPUT_AMOUNT, 100);
-	gcry_randomize(out, OUTPUT_AMOUNT, GCRY_VERY_STRONG_RANDOM);
-#endif
- */
+
 	printf("\nOUTPUT:\n");
 	for(i = 0; i < OUTPUT_AMOUNT; i++){
 	  output = out[i];
