@@ -697,9 +697,11 @@ assert(0);
         /* if we are asking for a small number of bytes, cache the rest of
      * the bytes */
     } else if (len < sizeof rng->data) {
+assert(rng->additionalAvail==0);
         rv = prng_generateNewBytes(rng, rng->data, sizeof rng->data,
-                                   rng->additionalAvail ? rng->additionalDataCache : NULL,
-                                   rng->additionalAvail);
+                                   NULL,0);
+//                                   rng->additionalAvail ? rng->additionalDataCache : NULL,
+//                                   rng->additionalAvail);
         rng->additionalAvail = 0;
         if (rv == SECSuccess) {
             memcpy(output, rng->data, len);
@@ -708,9 +710,11 @@ assert(0);
         }
         /* we are asking for lots of bytes, just ask the generator to pass them */
     } else {
+assert(rng->additionalAvail==0);
         rv = prng_generateNewBytes(rng, output, len,
-                                   rng->additionalAvail ? rng->additionalDataCache : NULL,
-                                   rng->additionalAvail);
+                                   NULL,0);
+//                                   rng->additionalAvail ? rng->additionalDataCache : NULL,
+//                                   rng->additionalAvail);
         rng->additionalAvail = 0;
     }
     PZ_Unlock(rng->lock);
