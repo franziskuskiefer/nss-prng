@@ -196,11 +196,11 @@ SHA256_Update(SHA256Context *ctx, const unsigned char *input,
 		if (update_count != 3) return;
 		}
 
-	if ((invocation_count == 3) || (invocation_count == 4) || (invocation_count == 6) || (invocation_count == 8))
+	if ((invocation_count == 2) || (invocation_count == 4) ||
+            (invocation_count == 6))
 		{
-		return;
+		input++;
 		}
-
 
         memcpy(H, input, SHA_MIN(inputLen, SHA256_LENGTH));
 /*
