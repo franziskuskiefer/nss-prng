@@ -690,13 +690,21 @@ assert(0);
      * see if we have enough bytes to fulfill the request.
      */
     if (len <= rng->dataAvail) {
+assert(0);
+
+#ifdef IGNORE
         memcpy(output, rng->data + ((sizeof rng->data) - rng->dataAvail), len);
         memset(rng->data + ((sizeof rng->data) - rng->dataAvail), 0, len);
         rng->dataAvail -= len;
         rv = SECSuccess;
+#endif
+
         /* if we are asking for a small number of bytes, cache the rest of
      * the bytes */
     } else if (len < sizeof rng->data) {
+assert(0);
+
+#ifdef IGNORE
 assert(rng->additionalAvail==0);
         rv = prng_generateNewBytes(rng, rng->data, sizeof rng->data,
                                    NULL,0);
@@ -708,6 +716,8 @@ assert(rng->additionalAvail==0);
             memset(rng->data, 0, len);
             rng->dataAvail = (sizeof rng->data) - len;
         }
+#endif
+
         /* we are asking for lots of bytes, just ask the generator to pass them */
     } else {
 assert(rng->additionalAvail==0);
