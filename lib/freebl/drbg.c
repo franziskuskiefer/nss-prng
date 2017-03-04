@@ -274,7 +274,7 @@ prng_reseed_test(RNGContext *rng, const PRUint8 *entropy,
 
 #define PRNG_ADD_BITS_AND_CARRY(dest, dest_len, add, len, carry) \
     PRNG_ADD_BITS(dest, dest_len, add, len, carry)               \
-    PRNG_ADD_CARRY_ONLY(dest, dest_len - len, carry)
+    PRNG_ADD_CARRY_ONLY(dest, (dest_len - len - 1), carry)
 
 /*
  * This function expands the internal state of the prng to fulfill any number
