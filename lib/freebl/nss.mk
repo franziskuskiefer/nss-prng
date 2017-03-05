@@ -4,7 +4,7 @@ CBMC=cbmc
 export LD_LIBRARY_PATH=../../../dist/Linux4.4_x86_64_cc_glibc_PTH_64_DBG.OBJ/lib/
 
 U=\
-prng_Hash_df.0:3
+prng_Hash_df.0:2,SHA256_Update.0:33
 
 
 #Common vars

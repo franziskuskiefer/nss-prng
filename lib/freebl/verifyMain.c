@@ -55,7 +55,12 @@ int main(){
             return -1;
         }
 
-        rv = RNG_GenerateGlobalRandomBytes(out, OUTPUT_AMOUNT);
+        rv = RNG_GenerateGlobalRandomBytes(out, 16);
+        if (rv != SECSuccess) {
+            SECU_PrintPRandOSError("");
+            return -1;
+        }
+        rv = RNG_GenerateGlobalRandomBytes(out+16, 16);
         if (rv != SECSuccess) {
             SECU_PrintPRandOSError("");
             return -1;
