@@ -22,7 +22,7 @@ RUN_SRC  = verifyMain.c \
 RUN_INCL = $(INCLUDE_OPTS)
 
 #Vars for model checking
-CBMC_OPTS = --gcc --unwindset "$(subst $(space),$(empty),$(U))" $(OPTS)
+CBMC_OPTS = --gcc --no-sat-preprocessor --unwindset "$(subst $(space),$(empty),$(U))" $(OPTS)
 CBMC_SRC  = verifyMain.c drbg.c fakesha512.c
 CBMC_INCL = $(INCLUDE_OPTS)
 
